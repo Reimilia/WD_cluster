@@ -14,7 +14,6 @@
 #pragma comment( lib, "../../../../lib/glut32.lib" )
 #pragma comment( lib, "../../../../lib/glu32.lib" )
 
-#include "mainwindow.h"
 #include "ArcBall.h"
 #include "globalFunctions.h"
 #include "HE_mesh/Mesh3D.h"
