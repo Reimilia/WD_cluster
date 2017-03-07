@@ -116,7 +116,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GeoDistProperty.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="wassdist2d.cpp" />
+    <ClCompile Include="wassdist2dmanifold.cpp" />
+    <ClCompile Include="wasserstein.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeoDistProperty.h" />
+    <ClInclude Include="wassdist2d.h" />
+    <ClInclude Include="wassdist2dmanifold.h" />
+    <ClInclude Include="wasserstein.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
