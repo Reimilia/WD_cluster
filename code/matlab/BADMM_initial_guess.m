@@ -14,8 +14,8 @@ z= sample_pos- repmat(sample_mean,[1,n]);
 sample_covs= z*diag(sample_prob)*z'+ (1e-4)*eye(dim);
 x= mvnrnd(sample_mean',sample_covs,guess_size);
 w= 1./guess_size * ones(1,guess_size);
-figure;
-plot3(x(:,1),x(:,2),w','*')
+%figure;
+%plot3(x(:,1),x(:,2),w','*')
 guess_centroid=mass_distribution(dim,guess_size,x',w,'euclidean');
 
 end
