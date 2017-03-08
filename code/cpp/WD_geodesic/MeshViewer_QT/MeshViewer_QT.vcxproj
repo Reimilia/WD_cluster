@@ -101,6 +101,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WDmesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArcBall.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="globalFunctions.h" />
     <ClInclude Include="HE_mesh\Mesh3D.h" />
     <ClInclude Include="HE_mesh\Vec.h" />
+    <ClInclude Include="WDmesh.h" />
     <CustomBuild Include="renderwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing renderwidget.h...</Message>
