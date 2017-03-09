@@ -55,7 +55,7 @@ rho
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <=1000)
+while (eps>=1e-6 && loop_count <=2000)
     
     %update 
     %%
