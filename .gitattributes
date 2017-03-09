@@ -15,5 +15,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+*.obj  diff=astextplain
 
 *.lib binary
+
