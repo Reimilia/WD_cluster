@@ -23,9 +23,9 @@ end
 
 center= BADMM(3,N,distributions);
 %Convert to voxels;
+voxels= voxel_convert(center,[Box_size,Box_size,Box_size]);
+Test_voxel_plot(1,voxels,Voxel_size)
 
-figure(N+1);
-plot3(center.pos(1,:),center.pos(2,:),center.pos(3,:),'+');
 
 %Test_voxel_plot(1,voxels,2.5);
 
