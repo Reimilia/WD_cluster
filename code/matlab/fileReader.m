@@ -3,8 +3,8 @@ function [F,V] = fileReader(fileName)
 [pathstr,name,ext] = fileparts(fileName);
 
 
-if(strcmpi(ext,'.stl') == 1)
-    [F,V] = stlRead(fileName);
+if(strcmpi(ext,'.off') == 1)
+    [F,V] = offRead(fileName);
 end
 
 if(strcmpi(ext,'.obj') == 1)

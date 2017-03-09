@@ -7,7 +7,7 @@ function Test_voxel_plot( index,voxels,VOX_SIZE)
         for i = 1 : voxSizeX
             for k = 1 : voxSizeZ
 
-                if(voxels(i,j,k) == 1)
+                if(voxels(i,j,k) > 1e-4)
 
                     X =  double(i)*VOX_SIZE;
                     Y =  double(j)*VOX_SIZE;
