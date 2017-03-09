@@ -79,6 +79,9 @@
     <ClCompile Include="ArcBall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WDmesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -100,6 +103,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ArcBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WDmesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
