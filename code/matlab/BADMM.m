@@ -55,19 +55,17 @@ rho
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 1000)
+while (eps>=1e-6 && loop_count <= 2000)
     
     %update 
     %%
     % $\PI_1$
-    tic
+    %tic
     P1 = P2.* exp((C+Lambda)/(-rho)) + non_zero;
     P1 = bsxfun(@times, P1', sample_prob'./sum(P1)')';
-    toc
     %update
     %%
     % $\PI_2$
-    tic
     last_P2 = P2;
     P2= P1 .* exp(Lambda/rho)+ non_zero;
     temp = [];
@@ -77,11 +75,10 @@ while (eps>=1e-6 && loop_count <= 1000)
         slice_sum=sum(slice_tmp,2);
         temp=cat(2,temp,slice_sum);
         weight= bsxfun(@times, 1./slice_sum', w);
-        P2(:,slice_pos(i):slice_pos(i+1)-1)= diag(weight)*slice_tmp;
+        P2(:,slice_pos(i):slice_pos(i+1)-1)= bsxfun(@times,weight',slice_tmp);
     end
-    toc
+
     %update w
-    tic
     stemp= sum(temp,2);
     w= stemp'/ sum(stemp);
     
@@ -92,7 +89,6 @@ while (eps>=1e-6 && loop_count <= 1000)
         x= sample_pos*P1'*diag(1./w)/N;
         C= pdist2(x',sample_pos','squaredeuclidean');
     end
-    toc
     %计算误差并输出调试
     if mod(loop_count,100)==0
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
@@ -103,7 +99,7 @@ while (eps>=1e-6 && loop_count <= 1000)
     end
     % 循环次数+1
     loop_count=loop_count+1;
-    disp loop_count
+    %toc
 end
 
 centroid= mass_distribution(dim,length(x),x,w,'euclidean');

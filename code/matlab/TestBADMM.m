@@ -1,8 +1,8 @@
 %% ≤‚ ‘æ€¿‡≥Ã–Ú
 
-%name={'h0','h1','h2','h3'};
+name={'h0','h1','h2','h3'};
 %name={'k0','k1','k2','k3','k4'};
-name={'w0','w1','w2','w3','w4','w5'};
+%name={'w0','w1','w2','w3','w4','w5'};
 addpath('../../data/test/small_pic_batch');
 
 N=length(name);

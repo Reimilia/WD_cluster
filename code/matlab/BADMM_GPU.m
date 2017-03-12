@@ -56,14 +56,14 @@ non_zero = 1e-16;
 C= pdist2(x',sample_pos','squaredeuclidean');
 CG= gpuArray(C);
 
-rho = 2.*mean(mean(C))/N;
+rho = 4./dim.*mean(mean(C))/N;
 rho
 
 eps=1;
 
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 1000)
+while (eps>=1e-6 && loop_count <= 1500)
     
     %update 
     %%
@@ -90,7 +90,7 @@ while (eps>=1e-6 && loop_count <= 1000)
         wG=gpuArray(diag(weight));
         new_P2= cat(2,new_P2,gather(wG*sG));
     end
-    P2G=gpuArray(P2);
+    P2G=gpuArray(new_P2);
     toc
     %update w
     
