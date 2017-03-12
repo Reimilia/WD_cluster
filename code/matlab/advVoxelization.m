@@ -13,13 +13,15 @@ PADDING = VOX_SIZE;
 
 [maxX, maxY, maxZ, minX, minY, minZ] = boundingBox(VR,PADDING);
 
-voxSizeX = ceil((maxX - minX)/VOX_SIZE);
-voxSizeY = ceil((maxY - minY)/VOX_SIZE);
-voxSizeZ = ceil((maxZ - minZ)/VOX_SIZE);
-
+%voxSizeX = ceil((maxX - minX)/VOX_SIZE);
+%voxSizeY = ceil((maxY - minY)/VOX_SIZE);
+%voxSizeZ = ceil((maxZ - minZ)/VOX_SIZE);
+voxSizeX= BOX_SIZE(1);
+voxSizeY= BOX_SIZE(2);
+voxSizeZ= BOX_SIZE(3);
 voxels = zeros(voxSizeX , voxSizeY, voxSizeZ);
 
-VR=VR/max(VR(:)) *BOX_SIZE;
+VR=bsxfun(@times,BOX_SIZE,VR/max(VR(:)));
 
 
 

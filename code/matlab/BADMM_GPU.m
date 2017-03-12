@@ -47,8 +47,8 @@ LambdaG=gpuArray(Lambda);
 
 loop_count = 0;
 x_update_loops=10;
-x= guess_cent.pos
-w= guess_cent.prob
+x= guess_cent.pos;
+w= guess_cent.prob;
 
 
 % 这一项是为了防止除法错误
@@ -56,15 +56,14 @@ non_zero = 1e-16;
 C= pdist2(x',sample_pos','squaredeuclidean');
 CG= gpuArray(C);
 
-rho = 4./dim.*mean(mean(C))/N;
+rho = 2.*mean(mean(C))/N;
 rho
 
 eps=1;
 
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 1500)
-    
+while (eps>=1e-6 && loop_count <= 3000)
     %update 
     %%
     % $\PI_1$
@@ -79,22 +78,18 @@ while (eps>=1e-6 && loop_count <= 1500)
     temp = [];
     P2= gather(P2G);
     new_P2=[];
-    tic
+
     %temp 为 N*m的矩阵
     for i=1:N
         slice_tmp=P2(:,slice_pos(i):slice_pos(i+1)-1);
         slice_sum=sum(slice_tmp,2);
         temp=cat(2,temp,slice_sum);
         weight= bsxfun(@times, 1./slice_sum', w);
-        sG=gpuArray(slice_tmp);
-        wG=gpuArray(diag(weight));
-        new_P2= cat(2,new_P2,gather(wG*sG));
+        new_P2= cat(2,new_P2,bsxfun(@times,weight',slice_tmp));
     end
     P2G=gpuArray(new_P2);
-    toc
     %update w
     
-    tic
     stemp= sum(temp,2);
     w= stemp'/ sum(stemp);
     
@@ -106,7 +101,7 @@ while (eps>=1e-6 && loop_count <= 1500)
         C= pdist2(x',sample_pos','squaredeuclidean');
         CG=gpuArray(C);
     end
-    toc
+
     %计算误差并输出调试
     if mod(loop_count,100)==0
         P1=gather(P1G); P2=gather(P2G);
@@ -117,7 +112,7 @@ while (eps>=1e-6 && loop_count <= 1500)
         eps=sqrt(dualres * primres);
     end
     % 循环次数+1
-    fprintf('%d ', loop_count);
+    %fprintf('%d ', loop_count);
     loop_count=loop_count+1;
 end
 

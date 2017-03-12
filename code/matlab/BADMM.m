@@ -41,8 +41,8 @@ end
 
 loop_count = 0;
 x_update_loops=10;
-x= guess_cent.pos
-w= guess_cent.prob
+x= guess_cent.pos;
+w= guess_cent.prob;
 
 
 % 这一项是为了防止除法错误
@@ -60,7 +60,6 @@ while (eps>=1e-6 && loop_count <= 2000)
     %update 
     %%
     % $\PI_1$
-    %tic
     P1 = P2.* exp((C+Lambda)/(-rho)) + non_zero;
     P1 = bsxfun(@times, P1', sample_prob'./sum(P1)')';
     %update
@@ -88,6 +87,7 @@ while (eps>=1e-6 && loop_count <= 2000)
     if mod(loop_count,x_update_loops)==0
         x= sample_pos*P1'*diag(1./w)/N;
         C= pdist2(x',sample_pos','squaredeuclidean');
+
     end
     %计算误差并输出调试
     if mod(loop_count,100)==0
@@ -99,7 +99,6 @@ while (eps>=1e-6 && loop_count <= 2000)
     end
     % 循环次数+1
     loop_count=loop_count+1;
-    %toc
 end
 
 centroid= mass_distribution(dim,length(x),x,w,'euclidean');

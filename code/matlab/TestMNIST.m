@@ -1,19 +1,16 @@
-%% 测试聚类程序
+%% 测试求解重心的问题
 
-name={'h0','h1','h2','h3'};
-%name={'k0','k1','k2','k3','k4'};
-%name={'w0','w1','w2','w3','w4','w5'};
-addpath('../../data/test/small_pic_batch');
+addpath('../../data/mnist_pic/2');
 
-N=length(name);
+N=32;
 distributions= cell(1,N);
 
 %figure 
 for i=1:N
-    p=imread([name{i} '.png']);
+    p=imread(['2 (' int2str(i) ').jpg']);
     %subplot(N,1,i);
     %imshow(p)
-    p=1-im2double(rgb2gray(p));
+    p=im2double(p);
 
     p=p/sum(p(:));
     omega=p(p>0);
@@ -25,10 +22,10 @@ for i=1:N
 end
 
 center= BADMM(2,N,distributions);
-img_center= image_convert(center,[64,64]);
+img_center= image_convert(center,[28,28]);
 figure
-imshow(img_center)
-imwrite(img_center, [name{i}(1) '_mean.png']);
+imshow(img_center);
+imwrite(img_center, ['mean.png']);
 
 
 figure
