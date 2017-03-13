@@ -9,7 +9,7 @@ for i=1:length(index)
 end
 
 img=img/max(img(:));
-img(img<0.35)=0;
-img= mat2gray(1-img);
+img(img<0.385)=0;
+img= mat2gray(img*2);
 end
 

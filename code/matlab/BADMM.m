@@ -11,7 +11,6 @@ if exist('options','var')~=0
 else
     guess_cent=0;
 end;
-
 % 匿名函数+函数式写法
 mk = cell2mat(cellfun(@(x)x.sample_size,samples,'UniformOutput',false));
 n= sum(mk);
@@ -20,7 +19,7 @@ sample_pos= cell2mat(cellfun(@(x)x.pos,samples,'UniformOutput',false));
 sample_prob= cell2mat(cellfun(@(x)x.prob,samples,'UniformOutput',false));
 
 % 方便查询切片
-slice_pos= [1,cumsum(mk)+1]
+slice_pos= [1,cumsum(mk)+1];
 
 % 待求分布的初始化
 if isa(guess_cent,'mass_distribution')==1
@@ -55,7 +54,7 @@ rho
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 2000)
+while (eps>=1e-6 && loop_count <= 1200)
     
     %update 
     %%
