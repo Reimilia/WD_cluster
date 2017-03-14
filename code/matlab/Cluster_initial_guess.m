@@ -7,7 +7,7 @@ guess_size= ceil(n/N);
 sample_mean= [max(sample_pos(:))+min(sample_pos(:))/2;max(sample_pos(:))+min(sample_pos(:))/2]+rand(2,1)*0.5;
 z= sample_pos- repmat(sample_mean,[1,n]);
 sample_covs= z*diag(sample_prob)*z'+ (1e-4)*eye(dim);
-sample_covs=sample_covs/max(sample_covs(:))/100;
+sample_covs=sample_covs/max(sample_covs(:))*10;
 
 x= mvnrnd(sample_mean',sample_covs,guess_size);
 

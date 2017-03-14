@@ -2,7 +2,6 @@ function [ PI ] = sinkhorn( Dist,lambda,a,b )
 %SINKHORN 使用sinkhorn迭代求解Wasserstein Distance问题的正则化最优解
 %   最后返回一个矩阵，为离散概率下的联合分布(这里假定了均为一维分布)
 K= exp(-lambda*Dist);
-KK= bsxfun(@rdivide,K,a');
 n=length(a);
 a=a';
 b=b';

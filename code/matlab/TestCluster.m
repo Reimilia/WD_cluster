@@ -1,7 +1,7 @@
 %% ≤‚ ‘œπæ€¿‡
 
-addpath('../../data/mnist_pic/cluster');
-N=60;
+addpath('../../data/mnist_pic/cluster2');
+N=200;
 distributions=cell(1,N);
 %figure 
 for i=1:N
@@ -18,5 +18,11 @@ for i=1:N
     distributions{i}= mass_distribution(2,length(omega),pos,omega,'euclidean');
 end
 
-labels=Cluster_Test(2,N,distributions,10);
+[labels,centers]=Cluster_Test(2,N,distributions,10);
 labels
+for i=1:length(centers)
+    figure(i)
+    plot3(centers{i}.pos(1,:),centers{i}.pos(2,:),centers{i}.prob,'+');
+end
+
+

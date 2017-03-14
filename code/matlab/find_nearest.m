@@ -13,11 +13,10 @@ for i=1:N
     x=centroids{i}.pos;
     w=centroids{i}.prob;
     C= pdist2(sample_pos',x','squaredeuclidean');
-    lambda= 60/mean(mean(C));
+    lambda= 40/mean(mean(C));
     T= sinkhorn(C,lambda,omega,w);
     dist(i)= trace(T * C);
 end
-dist
 [~,label]=min(dist);
 end
 

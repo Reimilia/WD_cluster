@@ -1,4 +1,4 @@
-function [ centroid ] = BADMM( dim,N,samples,~)
+function [ centroid ] = BADMM( dim,N,samples,varargin)
 %BADMM 用于实现基于WD的快速求解若干离散分布"重心"的问题
 %dim 为样本维度
 %N 为样本个数
@@ -6,8 +6,9 @@ function [ centroid ] = BADMM( dim,N,samples,~)
 %options 为函数追加参数
 
 %% Initialize components
-if exist('options','var')~=0
-    guess_cent =getoptions(options,'guess_center',0);
+if nargin>3
+    guess_cent =varargin{1};
+    fprintf('Use the presumed guessing centroid for B-ADMM algorithm.\n');
 else
     guess_cent=0;
 end;
@@ -54,7 +55,7 @@ rho
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 1200)
+while (eps>=1e-2 && loop_count <= 300)
     
     %update 
     %%
@@ -92,8 +93,8 @@ while (eps>=1e-6 && loop_count <= 1200)
     if mod(loop_count,100)==0
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
         dualres = norm(P2-last_P2,'fro')/norm(P2,'fro');
-        %fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
-        %fprintf('\n');       
+        fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
+        fprintf('\n');       
         eps=sqrt(dualres * primres);
     end
     % 循环次数+1

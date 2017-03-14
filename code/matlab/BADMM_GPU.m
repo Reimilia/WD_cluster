@@ -22,7 +22,7 @@ sample_prob= cell2mat(cellfun(@(x)x.prob,samples,'UniformOutput',false));
 posG= gpuArray(sample_pos);
 probG= gpuArray(sample_prob);
 % 方便查询切片
-slice_pos= [1,cumsum(mk)+1]
+slice_pos= [1,cumsum(mk)+1];
 
 % 待求分布的初始化
 if isa(guess_cent,'mass_distribution')==1
@@ -63,7 +63,7 @@ eps=1;
 
 
 %% iteration for B-ADMM
-while (eps>=1e-6 && loop_count <= 3000)
+while (eps>=1e-6 && loop_count <= 1200)
     %update 
     %%
     % $\PI_1$
