@@ -92,8 +92,8 @@ while (eps>=1e-6 && loop_count <= 1200)
     if mod(loop_count,100)==0
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
         dualres = norm(P2-last_P2,'fro')/norm(P2,'fro');
-        fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
-        fprintf('\n');       
+        %fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
+        %fprintf('\n');       
         eps=sqrt(dualres * primres);
     end
     % Ñ­»·´ÎÊý+1

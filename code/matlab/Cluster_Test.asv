@@ -4,15 +4,15 @@ function [ labels ] = Cluster_Test( dim,N,samples,cluster_number,~)
 
 % 尝试随机初始中心点
 centroids= cell(1,cluster_number);
+sample_pos= cell2mat(cellfun(@(x)x.pos,samples,'UniformOutput',false));
+sample_prob= cell2mat(cellfun(@(x)x.prob,samples,'UniformOutput',false));
+
+
 tic
 for i=1:cluster_number
-    sub_index= randi([1,N],1,ceil(N/4));
-    sample_pos= cell2mat(cellfun(@(x)x.pos,samples(sub_index),'UniformOutput',false));
-    sample_prob= cell2mat(cellfun(@(x)x.prob,samples(sub_index),'UniformOutput',false));
-
-    centroids{i}= Cluster_initial_guess(dim,N,sample_pos,sample_prob);
-    figure(i);
-    plot3(centroids{i}.pos(1,:),centroids{i}.pos(2,:),centroids{i}.prob,'+');
+   centroids{i}= Cluster_initial_guess(dim,N,sample_pos,sample_prob);
+   %figure(i);
+   %plot3(centroids{i}.pos(1,:),centroids{i}.pos(2,:),centroids{i}.prob,'+');
 end
 toc
 
@@ -27,17 +27,7 @@ labels=zeros(1,N);
 %随便分一个label
 %labels=randi([1,cluster_number],1,N);
 while (eps>=0.02 && loop_count<=100)
-    %Assign labels
-    last_labels=labels;
-    tic
-    labels=cell2mat(cellfun(a_func,samples,'UniformOutput',false));
-    toc
-    diff=abs(last_labels-labels);
-    diff=diff(diff>0);
-    eps=length(diff)/N;
-    
     labels
-    
     %Update centroids
     for i=1:cluster_number
         sub_samples=samples(find(labels==i));
