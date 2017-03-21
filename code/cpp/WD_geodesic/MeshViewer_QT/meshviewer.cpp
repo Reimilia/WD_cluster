@@ -91,6 +91,10 @@ void MeshViewer::CreateActions()
 	connect(action_restore_, SIGNAL(triggered()), renderingwidget_, SLOT(Restore()));
 	action_restore_->setStatusTip(tr("destroy changes"));
 
+	action_projection_depth_ = new QAction(tr("Write depth info"), this);
+	connect(action_projection_depth_, SIGNAL(triggered()), renderingwidget_, SLOT(WriteDepthViewData()));
+	action_projection_depth_->setStatusTip(tr("Test GL depth info"));
+
 }
 
 void MeshViewer::CreateMenus()
@@ -117,6 +121,7 @@ void MeshViewer::CreateToolBars()
 	toolbar_basic_->addAction(action_loadtexture_);
 	toolbar_basic_->addAction(action_background_);
 	toolbar_basic_->addAction(action_restore_);
+	toolbar_basic_->addAction(action_projection_depth_);
 
 }
 

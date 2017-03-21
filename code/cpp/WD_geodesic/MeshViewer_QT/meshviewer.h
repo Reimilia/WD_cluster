@@ -60,6 +60,7 @@ private:
 	QAction							*action_loadmesh_;
 	QAction							*action_loadtexture_;
 	QAction							*action_background_;
+	QAction							*action_projection_depth_;
 
 	// Render RadioButtons
 	QCheckBox						*checkbox_point_;
