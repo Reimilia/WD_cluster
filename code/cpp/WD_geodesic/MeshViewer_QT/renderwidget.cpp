@@ -18,7 +18,7 @@
 #include "globalFunctions.h"
 #include "HE_mesh/Mesh3D.h"
 
-RenderWidget::RenderWidget(QWidget *parent, MainWindow* mainwindow)
+RenderWidget::RenderWidget(QWidget *parent, MeshViewer* mainwindow)
 	: QGLWidget(parent), ptr_mainwindow_(mainwindow), eye_distance_(5.0),
 	has_lighting_(false), is_draw_point_(true), is_draw_edge_(false), is_draw_face_(false), is_draw_texture_(false)
 {

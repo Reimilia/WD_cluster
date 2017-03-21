@@ -401,6 +401,88 @@ void Mesh3D::WriteToOBJFile(const char* fouts)
 	fout.close();
 }
 
+bool Mesh3D::LoadFromOFFFile(const char * fins)
+{
+	//	cout << "Loading......." << endl;
+	FILE *pfile = fopen(fins, "r");
+
+	char *tok;
+	//char *tok_tok;
+	char temp[128];
+
+	try
+	{
+		ClearData();
+		//read vertex
+		fseek(pfile, 0, SEEK_SET);
+		char pLine[512];
+		fscanf(pfile, "%s", pLine);
+		int v_num, f_num, e_num, f_size;
+
+		if (pLine[0] != 'O' || pLine[1] != 'F' || pLine[2] != 'F')
+		{
+			//format error
+			return false;
+		}
+
+		fscanf(pfile, "%d %d %d", &v_num, &f_num, &e_num);
+
+		//read vertex
+		for (int i = 0; i < v_num; i++)
+		{
+			Vec3f nv;
+			fscanf(pfile, "%f %f %f", &nv[0], &nv[1], &nv[2]);
+			InsertVertex(nv);
+		}
+		
+		//read facets
+		for (int i = 0; i < f_num; i++)
+		{
+			fscanf(pfile, "%d", &f_size);
+			
+			std::vector<HE_vert* > s_faceid;
+			for (int j = 0; j < f_size; j++)
+			{
+				int id;
+				fscanf(pfile, "%d", &id);
+				HE_vert* hv = get_vertex(id);
+				bool findit = false;
+				for (int k = 0; k < (int)s_faceid.size(); k++)
+				{
+					if (hv == s_faceid[k])	//remove redundant vertex id if it exists
+					{
+						//	cout << "remove redundant vertex" << endl;
+						findit = true;
+						break;
+					}
+				}
+				if (findit == false && hv != nullptr)
+					s_faceid.push_back(hv);
+			}
+			if ((int)s_faceid.size() >= 3)
+			{
+				InsertFace(s_faceid);
+			}
+		}
+		
+		UpdateMesh();
+		Unify(2.f);
+	}
+	catch (...)
+	{
+		ClearData();
+		xmax_ = ymax_ = zmax_ = 1.f;
+		xmin_ = ymin_ = zmin_ = -1.f;
+
+		fclose(pfile);
+		return false;
+	}
+
+	fclose(pfile);
+
+	return isValid();
+}
+
 void Mesh3D::UpdateMesh(void)
 {
 	if (!isValid())

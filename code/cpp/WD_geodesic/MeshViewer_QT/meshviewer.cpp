@@ -33,8 +33,8 @@ MeshViewer::MeshViewer(QWidget *parent)
 	layout_left->addWidget(groupbox_render_);
 	layout_left->addStretch(1);
 
-	layout_left->addWidget(groupbox_spectral_);
-	layout_left->addStretch(1);
+	//layout_left->addWidget(groupbox_spectral_);
+	//layout_left->addStretch(1);
 
 
 	QHBoxLayout *layout_main = new QHBoxLayout;

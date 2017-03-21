@@ -300,6 +300,8 @@ public:
 	bool LoadFromOBJFile(const char* fins);
 	//! export the current mesh to an OBJ format file
 	void WriteToOBJFile(const char* fouts);
+	//! load a 3D mesh from an OFF format fiel
+	bool LoadFromOFFFile(const char* fins);
 
 	//! update mesh:
 	/*! 

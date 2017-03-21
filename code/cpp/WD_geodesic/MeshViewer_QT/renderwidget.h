@@ -13,7 +13,7 @@
 using trimesh::vec;
 using trimesh::point;
 
-class MainWindow;
+class MeshViewer;
 class CArcBall;
 class Mesh3D;
 
@@ -23,7 +23,7 @@ class RenderWidget : public QGLWidget
 	Q_OBJECT
 
 public:
-	RenderWidget(QWidget *parent, MainWindow* mainwindow = 0);
+	RenderWidget(QWidget *parent, MeshViewer* mainwindow = 0);
 	~RenderWidget();
 
 protected:

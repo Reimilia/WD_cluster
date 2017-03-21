@@ -10,7 +10,7 @@ class QLabel;
 class QPushButton;
 class QCheckBox;
 class QGroupBox;
-class RenderingWidget;
+class RenderWidget;
 
 class MeshViewer : public QMainWindow
 {
@@ -72,13 +72,13 @@ private:
 	QGroupBox						*groupbox_render_;
 
 	//Spectral Laplacian Meshes Compression
-	QAction							*render_colormap_;
-	QLabel							*label_k_;
-	QLineEdit						*blank_k_;
-	QAction							*begin_compression_;
+	//QAction							*render_colormap_;
+	//QLabel							*label_k_;
+	//QLineEdit						*blank_k_;
+	//QAction							*begin_compression_;
 
 
-	QGroupBox						*groupbox_spectral_;
+	//QGroupBox						*groupbox_spectral_;
 
 	// Information
 	QLabel							*label_meshinfo_;
