@@ -65,6 +65,8 @@ private:
 	void CheckDrawTexture(bool bv);
 	void CheckDrawAxes(bool bv);
 	void Restore();
+	void WriteDepthViewData();
+
 
 
 
@@ -77,7 +79,7 @@ private:
 	void ResetStatus();
 
 public:
-	MainWindow					*ptr_mainwindow_;
+	MeshViewer					*ptr_mainwindow_;
 	CArcBall					*ptr_arcball_;
 	Mesh3D						*ptr_mesh_;
 

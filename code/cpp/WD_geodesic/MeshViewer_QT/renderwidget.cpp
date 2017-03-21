@@ -4,6 +4,7 @@
 #include <QColorDialog>
 #include <QFileDialog>
 #include <iostream>
+#include <fstream>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QAction>
 #include <QTextCodec>
@@ -256,7 +257,7 @@ void RenderWidget::ReadMesh()
 {
 	QString filename = QFileDialog::
 		getOpenFileName(this, tr("Read Mesh"),
-			"..", tr("Meshes (*.obj)"));
+			"..", tr("Meshes (*.obj;*.off)"));
 
 
 
@@ -271,7 +272,11 @@ void RenderWidget::ReadMesh()
 	QTextCodec::setCodecForLocale(code);
 
 	ptr_mesh_backup_ = filename.toLocal8Bit();
-	ptr_mesh_->LoadFromOBJFile(ptr_mesh_backup_.data());
+	QString ext = filename.split('.').back();
+	if (ext == "obj")
+		ptr_mesh_->LoadFromOBJFile(ptr_mesh_backup_.data());
+	else
+		ptr_mesh_->LoadFromOFFFile(ptr_mesh_backup_.data());
 
 	//	m_pMesh->LoadFromOBJFile(filename.toLatin1().data());
 	emit(operatorInfo(QString("Read Mesh from") + filename + QString(" Done")));
@@ -558,6 +563,36 @@ void RenderWidget::Restore()
 	ResetStatus();
 	ptr_mesh_->LoadFromOBJFile(ptr_mesh_backup_.data());
 	updateGL();
+}
+
+void RenderWidget::WriteDepthViewData()
+{
+	if (ptr_mesh_->num_of_vertex_list() == 0)
+	{
+		emit(QString("The Mesh is Empty !"));
+		return;
+	}
+	QString filename = QFileDialog::
+		getSaveFileName(this, tr("Write Depth Info"),
+			"..", tr("Depth data (*.txt)"));
+
+	if (filename.isEmpty())
+		return;
+
+	std::ofstream fout(filename.toLatin1().data());
+
+	float *depth = new float[800 * 640];
+	glReadPixels(0, 0, 800, 640, GL_DEPTH_COMPONENT, GL_FLOAT, depth);
+	for (int i = 0; i < 640; i++)
+	{
+		for (int j = 0; j < 800; j++)
+		{
+			fout << depth[i * 800 + j] << ' ';
+		}
+		fout << std::endl;
+	}
+
+	delete[]depth;
 }
 
 
