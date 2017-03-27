@@ -1,4 +1,4 @@
-function [ label ] = find_nearest(test_sample,centroids,lambda)
+function [ dist ] = find_dist(test_sample,centroids,lambda)
 %FIND_NEAREST 
 % 计算待测试样本和所有重心之间谁的Wasserstein距离更近
 % 返回结果为标签(下标)
@@ -17,6 +17,5 @@ for i=1:N
     T= sinkhorn(C,lambda0,omega,w);
     dist(i)= trace(T * C);
 end
-[~,label]=min(dist);
 end
 
