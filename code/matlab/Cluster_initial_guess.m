@@ -1,20 +1,38 @@
-function [ guess_sample ] = Cluster_initial_guess( dim,N,sample_pos,sample_prob,~ )
+function [ guess_sample ] = Cluster_initial_guess( dim,N,samples,K,lambda,~ )
 %CLUSTER_INITIAL_GUESS 
-% XiaJB Distribution
+% Similar as K_means++ 
 
-n=size(sample_pos,2);
-guess_size= ceil(n/N);
-sample_mean= [max(sample_pos(:))+min(sample_pos(:))/2;max(sample_pos(:))+min(sample_pos(:))/2]+rand(2,1)*0.5;
-z= sample_pos- repmat(sample_mean,[1,n]);
-sample_covs= z*diag(sample_prob)*z'+ (1e-4)*eye(dim);
-sample_covs=sample_covs/max(sample_covs(:))*10;
+guess_sample=cell(1,K);
+index_list= zeros(1,K);
 
-x= mvnrnd(sample_mean',sample_covs,guess_size);
+% Initial guess with a random sample in the data.
+index_list(1)=randi([1,N],1,1);
+guess_sample(1)= samples(index_list(1));
 
-w= ones(1,guess_size)/guess_size;
-%figure;
-%plot3(x(:,1),x(:,2),w','*')
-guess_sample=mass_distribution(dim,guess_size,x',w,'euclidean');
+for i=2:K
+	a_func= @(x)find_nearest_dist(x,guess_sample(1:i-1),lambda);
+    dist=cell2mat(cellfun(a_func,samples,'UniformOutput',false));
+    dist=dist/sum(dist(:));
+    while 1>0
+        w=cumsum(dist);
+        x=rand(1,1);
+        index= find(w>x,1);
+        flag=0;
+        for j=1:i-1
+            if index==index_list(j)
+                flag=1;
+                break;
+            end
+        end
+        if flag==0
+            break;
+        end
+    end
+    index_list(i)=index;
+    guess_sample(i)=samples(index); 
+end
+
+index_list
 
 end
 
