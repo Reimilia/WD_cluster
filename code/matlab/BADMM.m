@@ -26,7 +26,15 @@ slice_pos= [1,cumsum(mk)+1];
 if isa(guess_cent,'mass_distribution')==1
     m = guess_cent.sample_size;
 else
-    guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
+    if(N<=100)
+        guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
+    else
+        k_sample_pos= cell2mat(cellfun(@(x)x.pos,samples(1:100),'UniformOutput',false));
+        k_sample_prob= cell2mat(cellfun(@(x)x.prob,samples(1:100),'UniformOutput',false));
+        guess_cent=BADMM_initial_guess(dim,100,k_sample_pos,k_sample_prob);
+        clear k_sample_pos;
+        clear k_sample_prob;
+    end
     m= guess_cent.sample_size;
 end
 
@@ -55,7 +63,7 @@ rho
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-2 && loop_count <= 300)
+while (eps>=1e-2 && loop_count <= 1200)
     
     %update 
     %%
