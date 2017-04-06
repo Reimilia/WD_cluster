@@ -28,6 +28,7 @@ if isa(guess_cent,'mass_distribution')==1
 else
     guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
     %guess_cent=samples{randi(N)};
+    
     m= guess_cent.sample_size;
 end
 
