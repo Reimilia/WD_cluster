@@ -28,7 +28,15 @@ if isa(guess_cent,'mass_distribution')==1
 else
     guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
     %guess_cent=samples{randi(N)};
-    
+    if(N<=100)
+        guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
+    else
+        k_sample_pos= cell2mat(cellfun(@(x)x.pos,samples(1:100),'UniformOutput',false));
+        k_sample_prob= cell2mat(cellfun(@(x)x.prob,samples(1:100),'UniformOutput',false));
+        guess_cent=BADMM_initial_guess(dim,100,k_sample_pos,k_sample_prob);
+        clear k_sample_pos;
+        clear k_sample_prob;
+    end
     m= guess_cent.sample_size;
 end
 
@@ -41,7 +49,7 @@ for i=1:N
     P2(:,slice_pos(i):slice_pos(i+1)-1) = guess_cent.prob'* samples{i}.prob;
 end
 
-loop_count=0;
+loop_count = 0;
 x_update_loops=10;
 x= guess_cent.pos;
 w= guess_cent.prob;
@@ -51,12 +59,11 @@ w= guess_cent.prob;
 non_zero = 1e-16;
 C= pdist2(x',sample_pos','squaredeuclidean');
 
-rho = 2.*mean(mean(C));
+rho = 2.*mean(mean(C))/N;
 rho
 
 eps=1;
-%figure(1);
-c=jet(21);
+
 %% iteration for B-ADMM
 while (eps>=1e-4 && loop_count <= 2000)
     
@@ -83,26 +90,25 @@ while (eps>=1e-4 && loop_count <= 2000)
     %update w
     stemp= sum(P2,2);
     w= stemp'/ sum(stemp);
-    
     %update Lambda
     Lambda = Lambda + rho*(P1-P2);
-
     
     if mod(loop_count,x_update_loops)==0
         x= sample_pos*P1'*diag(1./w)/N;
         C= pdist2(x',sample_pos','squaredeuclidean');
         rho = 2.*mean(mean(C));
+        rho = 2.*mean(mean(C))/N;
     end
-    % 循环次数+1
 
     loop_count=loop_count+1;
-    %计算误差并输出调试
     if mod(loop_count,100)==0
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
         dualres = norm(P2-last_P2,'fro')/norm(P2,'fro');
         %fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
         fprintf('\n%f,%f,%f,%f', norm(P1,'fro'),norm(P2,'fro'),norm(Lambda,'fro'),norm(P1-P2,'fro'));
         %fprintf('\n');       
+        fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
+        fprintf('\n');       
         eps=sqrt(dualres * primres);
         %% test plot
         if dim==2
@@ -111,9 +117,7 @@ while (eps>=1e-4 && loop_count <= 2000)
             %plot(x(1,:),x(2,:),'+','color',c(loop_count/100+1,:));
             hold on;
         end
-    end
-
-    
+    end  
 end
 
 centroid= mass_distribution(dim,length(x),x,w,'euclidean');

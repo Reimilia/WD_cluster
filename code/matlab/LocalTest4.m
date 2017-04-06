@@ -1,7 +1,7 @@
 %% ≤‚ ‘≤„¥Œæ€¿‡
 
-Data_path= 'D:\Code_Data\test\';
-Train_Data_path= 'D:\Code_Data\train\';
+Data_path= 'C:\Users\USER\Documents\Python Scripts\test\';
+Train_Data_path= 'C:\Users\USER\Documents\Python Scripts\train\';
 l={'1','2','3','4','5','6','7','8','9','0'};
 batch_size= length(l);
 
@@ -14,21 +14,10 @@ train_labels= importdata([Train_Data_path '..\' filename]);
 for k=1:batch_size
     subindex=find(train_labels==str2double(l{k}));
     samples= cell(1,50);
-    for i=1:100
-        p=imread([Train_Data_path int2str(subindex(i*10)-1) '.png']);
-        %subplot(N,1,i);
-        p=im2double(p);
-        p(p<0.3)=0;
-        p=p/sum(p(:));
-        omega=p(p>0);
-        omega=omega';
-        [px,py]=ind2sub(size(p),find(p>0));
-        pos=cat(1,px',py');
-        %center=mean(pos,2);
-        %pos=pos-center;
-        samples{i}= mass_distribution(2,length(omega),pos,omega,'euclidean');
+    for i=1:50
+        samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'],0.5);
     end   
-    distributions{k}= BADMM(2,100,samples);
+    distributions{k}= BADMM(2,50,samples);
     centers(:,k)= mean(distributions{k}.pos,2);
     distributions{k}.pos=distributions{k}.pos-centers(:,k);
     %figure(k)
@@ -46,20 +35,12 @@ labels=zeros(1,L);
 dist=zeros(L,batch_size);
 
 for i=1:L
-    p=imread([Data_path int2str(i-1) '.png']);
+    test=read_image([Data_path int2str(i-1) '.png'],0.5);
     %subplot(N,1,i);
-    p=im2double(p);
-    p(p<0.3)=0;
-    p=p/sum(p(:));
-    omega=p(p>0);
-    omega=omega';
-    [px,py]=ind2sub(size(p),find(p>0));
-    pos=cat(1,px',py');
-    means=mean(pos,2);
-    pos=pos-means;
-    test= mass_distribution(2,length(omega),pos,omega,'euclidean');
-    labels(i)= find_nearest(test,distributions,100);
-    dist(i,:)= find_dist(test,distributions,100);
+    means=mean(test.pos,2);
+    test.pos=test.pos-means;
+    labels(i)= find_nearest(test,distributions,60);
+    dist(i,:)= find_dist(test,distributions,60);
     if(mod(i,one_percent)==0)
         fprintf('%d percent is complete\n',round(i/one_percent));
     end
@@ -68,7 +49,7 @@ end
 
 save('x.mat','dist','labels');
 filename= 'label_test.txt';
-gt_labels= importdata([Data_path '..\' filename]);
+gt_labels= importdata([Train_Data_path '..\' filename]);
 
 diff=abs(gt_labels-labels);
 diff(diff==10)=0;
@@ -76,4 +57,16 @@ diff=diff(diff>0);
 length(diff)
 eps=length(diff)/L;
 %system('shutdown -s');
+
+D=[];
+position=zeros(1,10);
+for i=1:10
+    subdist= dist(find(gt_labels==i-1),:);
+    D=cat(1,D,subdist(1:100,:));
+end
+C= pdist2(D,D,'euclidean');
+Y=mdscale(C,2);
+
+
+
 
