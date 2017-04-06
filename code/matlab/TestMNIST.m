@@ -11,14 +11,14 @@ for i=1:N
     %subplot(N,1,i);
     %imshow(p)
     p=im2double(p);
-
+    p(p<0.1)=0;
     p=p/sum(p(:));
     omega=p(p>0);
     omega=omega';
     [px,py]=ind2sub(size(p),find(p>0));
     pos=cat(1,px',py');
     distributions{i}= mass_distribution(2,length(omega),pos,omega,'euclidean');
-
+ 
 end
 
 center= BADMM(2,N,distributions);
@@ -28,7 +28,7 @@ imshow(img_center);
 imwrite(img_center, ['mean.png']);
 
 
-figure
+figure(20)
 plot3(center.pos(1,:),center.pos(2,:),center.prob,'+')
 
 %%
