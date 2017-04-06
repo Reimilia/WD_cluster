@@ -1,40 +1,25 @@
 %% 测试求解重心的问题
 
 addpath('../../data/mnist_pic/2');
+Data_path= 'C:\Users\USER\Documents\Python Scripts\test\';
+Train_Data_path= 'C:\Users\USER\Documents\Python Scripts\train\';
+l={'1','2','3','4','5','6','7','8','9','0'};
+batch_size= length(l);
 
-N=32;
-distributions= cell(1,N);
+filename= 'label_train.txt';
+train_labels= importdata([Train_Data_path '..\' filename]);
 
-%figure 
+N=50;
+k=2;
+subindex=find(train_labels==str2double(l{k}));
+samples= cell(1,N);
 for i=1:N
-    p=imread(['2 (' int2str(i) ').jpg']);
-    %subplot(N,1,i);
-    %imshow(p)
-    p=im2double(p);
-    p(p<0.1)=0;
-    p=p/sum(p(:));
-    omega=p(p>0);
-    omega=omega';
-    [px,py]=ind2sub(size(p),find(p>0));
-    pos=cat(1,px',py');
-    distributions{i}= mass_distribution(2,length(omega),pos,omega,'euclidean');
- 
-end
-
-center= BADMM(2,N,distributions);
-img_center= image_convert(center,[28,28]);
-figure
+    samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'], 0.1);
+end   
+center= BADMM(2,N,samples);
+img_center= image_convert(center,[28,28],3);
 imshow(img_center);
 imwrite(img_center, ['mean.png']);
-
-
-figure(20)
-plot3(center.pos(1,:),center.pos(2,:),center.prob,'+')
-
-%%
-% 
-% 
-% 
-
+plot3(center.pos(1,:),center.pos(2,:),center.prob,'+');
 
 

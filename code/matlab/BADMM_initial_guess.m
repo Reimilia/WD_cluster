@@ -14,9 +14,10 @@ sample_covs= z*diag(sample_prob)*z'+ (1e-4)*eye(dim);
 x= mvnrnd(sample_mean',sample_covs,guess_size);
 w= rand(1,guess_size);
 w= w/sum(w(:));
+%w= ones(1,guess_size)/guess_size;
 %figure;
 %plot3(x(:,1),x(:,2),w','*')
 guess_centroid=mass_distribution(dim,guess_size,x',w,'euclidean');
 
-end
-
+end  
+    
