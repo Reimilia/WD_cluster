@@ -1,4 +1,4 @@
-function [ PI ] = sinkhorn( Dist,lambda,a,b )
+function [ PI ,alpha ] = sinkhorn( Dist,lambda,a,b )
 %SINKHORN 使用sinkhorn迭代求解Wasserstein Distance问题的正则化最优解
 %   最后返回一个矩阵，为离散概率下的联合分布(这里假定了均为一维分布)
 K= exp(-lambda*Dist);
@@ -16,6 +16,10 @@ while eps>=5e-3 && loop_count<=200
     eps= norm(last_u-u,'fro')/norm(u,'fro');
     loop_count=loop_count+1;
 end
+
+%dual solution
+alpha= -log(u)'/lambda+sum(log(u))/lambda/n*ones(1,n);
+
 PI=bsxfun(@times, v, (bsxfun(@times, K, u))');
 
 end

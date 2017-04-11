@@ -1,7 +1,7 @@
 %% ²âÊÔ¾ÛÀà³ÌÐò
 
-name={'h0','h1','h2','h3'};
-%name={'k0','k1','k2','k3','k4'};
+%name={'h0','h1','h2','h3'};
+name={'k0','k1','k2','k3','k4'};
 %name={'w0','w1','w2','w3','w4','w5'};
 addpath('../../data/test/small_pic_batch');
 
@@ -14,7 +14,7 @@ for i=1:N
     %subplot(N,1,i);
     %imshow(p)
     p=1-im2double(rgb2gray(p));
-
+    p=(exp(p)-1)*2;
     p=p/sum(p(:));
     omega=p(p>0);
     omega=omega';
@@ -25,7 +25,7 @@ for i=1:N
 end
 
 center= BADMM(2,N,distributions);
-img_center= image_convert(center,[64,64]);
+img_center= image_convert(center,[64,64],1);
 figure
 imshow(img_center)
 imwrite(img_center, [name{i}(1) '_mean.png']);

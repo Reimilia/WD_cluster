@@ -12,6 +12,9 @@ p=imread(filename);
 %subplot(N,1,i);
 p=im2double(p);
 p(p<threshold)=0;
+
+p=(exp(p)-1)*2;
+
 p=p/sum(p(:));
 omega=p(p>0);
 omega=omega';
