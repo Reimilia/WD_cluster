@@ -11,7 +11,7 @@ x= guess_cent.pos;
 w= guess_cent.prob;
 eps=1;
 loop_count=0;
-theta=0.7;
+theta=0.3;
 
 while (eps>=1e-4 && loop_count<=1000)
     last_w=w;
@@ -23,14 +23,14 @@ while (eps>=1e-4 && loop_count<=1000)
     % update x
     for i=1:N
         C= pdist2(x',samples{i}.pos','squaredeuclidean');
-        lambda= 60/mean(mean(C));
+        lambda= 60/median(C(:));
         T= sinkhorn(C,lambda,w,samples{i}.prob);
         K= K+samples{i}.pos*T;
     end
-    K
     last_x=x;
     x= (1-theta)*x+ theta/N*K*diag(1./w);
     eps=max(norm(last_x-x)/norm(x),norm(last_w-w)/norm(w));
+    eps
     loop_count=loop_count+1;
 
 end

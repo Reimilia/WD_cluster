@@ -3,16 +3,16 @@
 addpath('./ImageIO');
 addpath('./Barycenter');
 addpath('../../data/mnist_pic/2');
-Data_path= 'D:\Code_Data\test\';
-Train_Data_path= 'D:\Code_Data\train\';
+Data_path= 'C:\Users\USER\Documents\Python Scripts\test\';
+Train_Data_path= 'C:\Users\USER\Documents\Python Scripts\train\';
 l={'1','2','3','4','5','6','7','8','9','0'};
 batch_size= length(l);
 
 filename= 'label_train.txt';
 train_labels= importdata([Train_Data_path '..\' filename]);
 
-N=20;
-k=2;
+N=500;
+k=8;
 subindex=find(train_labels==str2double(l{k}));
 samples= cell(1,N);
 for i=1:N

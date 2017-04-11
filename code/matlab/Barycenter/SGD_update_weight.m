@@ -4,8 +4,12 @@ function [ weight ] = SGD_update_weight( dim,N,samples, x,w )
 
 eps=1;
 loop_count=0;
-t0=0.0001;
+
+
 n=length(w);
+
+%这个t0很关键，因为不是numcerically stable的算法
+t0=0.0001;
 
 %Bregman Divergence
 a1=ones(1,n)/n;
@@ -33,7 +37,7 @@ end
 
 
 function alpha= get_dual_optimal(u,v,C)
-    lambda=60/mean(mean(C));
+    lambda=60/median(C(:));
     [~,alpha]=sinkhorn(C,lambda,u,v);
 end
 

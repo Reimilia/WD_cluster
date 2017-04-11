@@ -9,7 +9,7 @@ addpath(mat_save_path);
 
 N=length(name);
 distributions= cell(1,N);
-Box_size=[24,24,24];
+Box_size=[15,15,15];
 Voxel_size=1.0;
 
 for i=1:N
@@ -33,7 +33,7 @@ for i=1:N
     
 end
 
-center= BADMM_GPU(3,N,distributions);
+center= BADMM(3,N,distributions);
 figure(N+1);
 plot3(center.pos(1,:),center.pos(2,:),center.pos(3,:),'+')
 axis([0,24,0,24,0,24]);

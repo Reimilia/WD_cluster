@@ -21,7 +21,7 @@ for i=1:length(pos)
         img(x,y)= img(x,y)+distribution.prob(i);
     end
 end
-diff= length(pos)-length(img(img>0))
+diff= length(pos)-length(img(img>0));
 %img= img./cnt;
 min_d = min(img(img>0));
 max_d = max(img(:));

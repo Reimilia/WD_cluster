@@ -1,4 +1,4 @@
-function [ centroid ] = BADMM( dim,N,samples,varargin)
+function [ centroid ] = BADMM( dim,N,samples,varargin,options)
 %BADMM 用于实现基于WD的快速求解若干离散分布"重心"的问题
 %dim 为样本维度
 %N 为样本个数
@@ -29,17 +29,17 @@ else
     % due to memory limitation
     % it is not wise to generate random initial data with all points.
     %if(N<=1000)
-    %   guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
+    %  guess_cent=BADMM_initial_guess(dim,N,sample_pos,sample_prob);
     %else
-    %   sample_index= randi(N,[1,1000]);
-    %   k_sample_pos= cell2mat(cellfun(@(x)x.pos,samples(sample_index),'UniformOutput',false));
-    %   k_sample_prob= cell2mat(cellfun(@(x)x.prob,samples(sample_index),'UniformOutput',false));
-    %   guess_cent=BADMM_initial_guess(dim,1000,k_sample_pos,k_sample_prob);
-    %   clear k_sample_pos;
-    %  clear k_sample_prob;
+    %  sample_index= randi(N,[1,1000]);
+    %  k_sample_pos= cell2mat(cellfun(@(x)x.pos,samples(sample_index),'UniformOutput',false));
+    %  k_sample_prob= cell2mat(cellfun(@(x)x.prob,samples(sample_index),'UniformOutput',false));
+    %  guess_cent=BADMM_initial_guess(dim,1000,k_sample_pos,k_sample_prob);
+    %  clear k_sample_pos;
+    % clear k_sample_prob;
     %end
     guess_size= ceil(n/N)
-    guess_cent= BADMM_2D_initial_guess(guess_size,[28,28]);
+    guess_cent= BADMM_3D_initial_guess(guess_size,[15,15,15]);
     m= guess_cent.sample_size;
 end
 
@@ -53,7 +53,7 @@ for i=1:N
 end
 
 loop_count = 0;
-x_update_loops=1;
+x_update_loops=10;
 x= guess_cent.pos;
 w= guess_cent.prob;
 % 这一项是为了防止除法错误
@@ -120,13 +120,13 @@ while (eps>=1e-10 && loop_count <= 5000)
         end
 
     end  
-    loop_count=loop_count+1;
+    loop_count=loop_count+1
     
     if mod(loop_count,x_update_loops)==0
         x= sample_pos*P1'*diag(1./w)/N;
         
         C= pdist2(x',sample_pos','squaredeuclidean');
-        %rho = 2*mean(mean(C))
+        rho = 2*mean(mean(C))
        %% test plot
         if dim==2 && loop_count<=100
             centroid= mass_distribution(dim,length(x),x,w,'euclidean');
