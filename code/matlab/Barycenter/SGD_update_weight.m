@@ -4,20 +4,20 @@ function [ weight ] = SGD_update_weight( dim,N,samples, x,w )
 
 eps=1;
 loop_count=0;
-t0=0.1;
+t0=0.0001;
 n=length(w);
 
 %Bregman Divergence
 a1=ones(1,n)/n;
 a2=a1;
 a=zeros(1,n);
-while eps>=1e-4 && loop_count<=1000
-    loop_count=loop_count+1;
-    beta= (loop_count+1)/2;
+while eps>=1e-4 && loop_count<=100
+    beta= (loop_count+3)/2;
     last_a=a;
     a= (1-1/beta)*a1+1/beta*a2;
     %pause(2);
-    a_func= @(z)get_dual_optimal(w,z.prob,pdist2(x',z.pos','squaredeuclidean'));
+    a_func= @(z)get_dual_optimal(a,z.prob,pdist2(x',z.pos','squaredeuclidean'));
+    
     alpha=sum(reshape(cell2mat(cellfun(a_func,samples,'Uniformoutput',false)),N,n))/N;
     %pause(2);
     a2= a2 .* exp(-t0*beta*alpha);
@@ -25,6 +25,7 @@ while eps>=1e-4 && loop_count<=1000
     a2= a2/sum(a2);
     a1= (1-1/beta)*a1+1/beta*a2;
     eps= norm(last_a-a)/norm(a);
+    loop_count=loop_count+1;
 end
 
 weight=a;

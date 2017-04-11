@@ -11,14 +11,14 @@ x= guess_cent.pos;
 w= guess_cent.prob;
 eps=1;
 loop_count=0;
-theta=0.5;
+theta=0.7;
 
 while (eps>=1e-4 && loop_count<=1000)
     last_w=w;
     %Test pic
     centroid=mass_distribution(dim,N,x,w,'euclidean');
     heat_imwrite(image_convert(centroid,[28,28],1),['temp/' int2str(loop_count) '.png']);
-    w= SGD_update_weight(dim,N,samples,x,w)
+    w= SGD_update_weight(dim,N,samples,x,w);
     K=zeros(1,length(w));
     % update x
     for i=1:N
@@ -27,6 +27,7 @@ while (eps>=1e-4 && loop_count<=1000)
         T= sinkhorn(C,lambda,w,samples{i}.prob);
         K= K+samples{i}.pos*T;
     end
+    K
     last_x=x;
     x= (1-theta)*x+ theta/N*K*diag(1./w);
     eps=max(norm(last_x-x)/norm(x),norm(last_w-w)/norm(w));
