@@ -1,4 +1,4 @@
-function [ centroid ] = BADMM( dim,N,samples,varargin,options)
+function [ centroid ] = BADMM( dim,N,samples,options)
 %BADMM 用于实现基于WD的快速求解若干离散分布"重心"的问题
 %dim 为样本维度
 %N 为样本个数
@@ -6,19 +6,16 @@ function [ centroid ] = BADMM( dim,N,samples,varargin,options)
 %options 为函数追加参数
 
 %% Initialize components
-if nargin>3
-    guess_cent =varargin{1};
-    fprintf('Use the presumed guessing centroid for B-ADMM algorithm.\n');
-else
-    guess_cent=0;
-end;
+niter = get_options(options, 'niter', 2000);
+guess_cent = get_options(options,'guess', 0);
+
 % 匿名函数+函数式写法
 mk = cell2mat(cellfun(@(x)x.sample_size,samples,'UniformOutput',false));
 n= sum(mk);
 
 sample_pos= cell2mat(cellfun(@(x)x.pos,samples,'UniformOutput',false));
 sample_prob= cell2mat(cellfun(@(x)x.prob,samples,'UniformOutput',false));
-
+size(sample_pos)
 % 方便查询切片
 slice_pos= [1,cumsum(mk)+1];
 
@@ -39,7 +36,7 @@ else
     % clear k_sample_prob;
     %end
     guess_size= ceil(n/N)
-    guess_cent= BADMM_3D_initial_guess(guess_size,[15,15,15]);
+    guess_cent= BADMM_2D_initial_guess(guess_size,[28,28]);
     m= guess_cent.sample_size;
 end
 
@@ -48,25 +45,26 @@ end
 %用于产生初始的位于支持域上的一个联合分布的initial guess (m*n的矩阵)
 Lambda=zeros(m,n);
 P1=zeros(m,n); 
-for i=1:N
-    P2(:,slice_pos(i):slice_pos(i+1)-1) = guess_cent.prob'* samples{i}.prob;
-end
+P2= guess_cent.prob'*sample_prob;
+sum(sample_prob)
 
 loop_count = 0;
 x_update_loops=10;
 x= guess_cent.pos;
 w= guess_cent.prob;
 % 这一项是为了防止除法错误
-non_zero = 1e-16;
+non_zero = 1e-20;
 C= pdist2(x',sample_pos','squaredeuclidean');
-
-rho = 2*mean(mean(C));
+rho=0;
+for i=1:N
+    rho=rho+2*mean(mean(C(:,slice_pos(i):slice_pos(i+1)-1)));
+end
+rho=rho/N;
 rho
-
 eps=1;
 
 %% iteration for B-ADMM
-while (eps>=1e-10 && loop_count <= 5000)
+while (eps>=1e-10 && loop_count <= niter)
     
     %update 
     %%
@@ -75,9 +73,16 @@ while (eps>=1e-10 && loop_count <= 5000)
     P1 = bsxfun(@times, P1, sample_prob./sum(P1));
     %update
     %%
+    
+    
     % $\PI_2$
     last_P2 = P2;
     P2= P1 .* exp(Lambda/rho)+ non_zero;
+    %update w
+    stemp= sum(P2,2);
+    last_w=w;
+    w= stemp'/ sum(stemp);
+    norm(w-last_w);
     %temp = [];
     %temp 为 N*m的矩阵
     for i=1:N
@@ -88,9 +93,7 @@ while (eps>=1e-10 && loop_count <= 5000)
         P2(:,slice_pos(i):slice_pos(i+1)-1)= bsxfun(@times,weight',slice_tmp);
     end
 
-    %update w
-    stemp= sum(P2,2);
-    w= stemp'/ sum(stemp);
+
     %update Lambda
     Lambda = Lambda + rho*(P1-P2);
     
@@ -120,13 +123,12 @@ while (eps>=1e-10 && loop_count <= 5000)
         end
 
     end  
-    loop_count=loop_count+1
+    loop_count=loop_count+1;
     
     if mod(loop_count,x_update_loops)==0
         x= sample_pos*P1'*diag(1./w)/N;
         
         C= pdist2(x',sample_pos','squaredeuclidean');
-        rho = 2*mean(mean(C))
        %% test plot
         if dim==2 && loop_count<=100
             centroid= mass_distribution(dim,length(x),x,w,'euclidean');
@@ -136,7 +138,6 @@ while (eps>=1e-10 && loop_count <= 5000)
         end
     end
 end
-
 centroid= mass_distribution(dim,length(x),x,w,'euclidean');
 end
 

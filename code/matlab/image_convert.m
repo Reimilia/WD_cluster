@@ -1,7 +1,7 @@
 function [ img ] = image_convert( distribution, imgsize, power ,options )
 %转换为图像数据
 % power 表示放大倍率
-pos= floor(distribution.pos*power);
+pos= floor(diag(imgsize)*distribution.pos*power);
 size(pos);
 imgsize= imgsize*power;
 img=zeros(imgsize);

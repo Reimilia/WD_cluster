@@ -4,6 +4,8 @@
 name={'k0','k1','k2','k3','k4'};
 %name={'w0','w1','w2','w3','w4','w5'};
 addpath('../../data/test/small_pic_batch');
+addpath('./ImageIO');
+addpath('./Barycenter');
 
 N=length(name);
 distributions= cell(1,N);
@@ -19,12 +21,14 @@ for i=1:N
     omega=p(p>0);
     omega=omega';
     [px,py]=ind2sub(size(p),find(p>0));
+    px=px/64;
+    py=py/64;
     pos=cat(1,px',py');
     distributions{i}= mass_distribution(2,length(omega),pos,omega,'euclidean');
 
 end
 
-center= BADMM(2,N,distributions);
+center= SGD_barycenter(2,N,distributions);
 img_center= image_convert(center,[64,64],1);
 figure
 imshow(img_center)
