@@ -35,7 +35,7 @@ else
     %  clear k_sample_pos;
     % clear k_sample_prob;
     %end
-    guess_size= ceil(n/N)
+    guess_size= ceil(2*n/N)
     guess_cent= BADMM_2D_initial_guess(guess_size,[28,28]);
     m= guess_cent.sample_size;
 end
@@ -62,9 +62,11 @@ end
 rho=rho/N;
 rho
 eps=1;
-
+w_norm4 = zeros(1,niter);
+x_norm4 = zeros(1,niter);
+pi_norm4= zeros(1,niter);
 %% iteration for B-ADMM
-while (eps>=1e-10 && loop_count <= niter)
+while (eps>=1e-4 && loop_count <= niter)
     
     %update 
     %%
@@ -80,9 +82,15 @@ while (eps>=1e-10 && loop_count <= niter)
     P2= P1 .* exp(Lambda/rho)+ non_zero;
     %update w
     stemp= sum(P2,2);
+    %cum=ones(m,1);
+    %for i=1:N
+    %%    slice_tmp=P2(:,slice_pos(i):slice_pos(i+1)-1);
+    %    slice_sum=sum(slice_tmp,2);
+    %    cum= cum .* (slice_sum .^(1/N));    
+    %end
     last_w=w;
     w= stemp'/ sum(stemp);
-    norm(w-last_w);
+    w_norm4(loop_count+1)=norm(w-last_w);
     %temp = [];
     %temp Îª N*mµÄ¾ØÕó
     for i=1:N
@@ -99,10 +107,11 @@ while (eps>=1e-10 && loop_count <= niter)
     
     
 
-
+    pi_norm4(loop_count+1)=norm(P1-P2,'fro');
     if mod(loop_count,100)==0
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
         dualres = norm(P2-last_P2,'fro')/norm(P2,'fro');
+        
         %fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
         fprintf('\n%f,%f,%f,%f\n', norm(P1,'fro'),norm(P2,'fro'),norm(Lambda,'fro'),norm(P1-P2,'fro'));
         %fprintf('\n');       
@@ -126,18 +135,20 @@ while (eps>=1e-10 && loop_count <= niter)
     loop_count=loop_count+1;
     
     if mod(loop_count,x_update_loops)==0
+        last_x= x;
         x= sample_pos*P1'*diag(1./w)/N;
-        
+        x_norm4(loop_count)= norm(x-last_x);
         C= pdist2(x',sample_pos','squaredeuclidean');
        %% test plot
-        if dim==2 && loop_count<=100
-            centroid= mass_distribution(dim,length(x),x,w,'euclidean');
-            heat_imwrite(image_convert(centroid,[28,28],1),['temp/',int2str(loop_count),'.png']);
-            %plot(x(1,:),x(2,:),'+','color',c(loop_count/100+1,:));
+        %if dim==2 && loop_count<=100
+        %    centroid= mass_distribution(dim,length(x),x,w,'euclidean');
+        %    heat_imwrite(image_convert(centroid,[28,28],1),['temp/',int2str(loop_count),'.png']);
+        %    %plot(x(1,:),x(2,:),'+','color',c(loop_count/100+1,:));
             %hold on;
-        end
+        %end
     end
 end
 centroid= mass_distribution(dim,length(x),x,w,'euclidean');
+save('weight.mat','w_norm4','x_norm4','pi_norm4','-append');
 end
 

@@ -1,7 +1,9 @@
 %% ≤‚ ‘≤„¥Œæ€¿‡
 
-Data_path= 'C:\Users\USER\Documents\Python Scripts\test\';
-Train_Data_path= 'C:\Users\USER\Documents\Python Scripts\train\';
+addpath('./ImageIO');
+addpath('./Barycenter');
+Data_path= 'D:\Code_Data\test\';
+Train_Data_path= 'D:\Code_Data\train\';
 l={'1','2','3','4','5','6','7','8','9','0'};
 batch_size= length(l);
 
@@ -13,11 +15,13 @@ train_labels= importdata([Train_Data_path '..\' filename]);
 
 for k=1:batch_size
     subindex=find(train_labels==str2double(l{k}));
-    samples= cell(1,50);
-    for i=1:50
-        samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'],0.5);
+    samples= cell(1,200);
+    for i=1:200
+        samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'],0.1);
     end   
-    distributions{k}= BADMM(2,50,samples);
+    options=[];
+    options.niter=3000;
+    distributions{k}= SGD_barycenter(2,200,samples);
     centers(:,k)= mean(distributions{k}.pos,2);
     distributions{k}.pos=distributions{k}.pos-centers(:,k);
     %figure(k)
@@ -35,7 +39,7 @@ labels=zeros(1,L);
 dist=zeros(L,batch_size);
 
 for i=1:L
-    test=read_image([Data_path int2str(i-1) '.png'],0.5);
+    test=read_image([Data_path int2str(i-1) '.png'],0.1);
     %subplot(N,1,i);
     means=mean(test.pos,2);
     test.pos=test.pos-means;
@@ -47,7 +51,7 @@ for i=1:L
     
 end
 
-save('x.mat','dist','labels');
+save('xx.mat','dist','labels');
 filename= 'label_test.txt';
 gt_labels= importdata([Train_Data_path '..\' filename]);
 

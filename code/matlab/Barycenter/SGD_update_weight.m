@@ -1,5 +1,5 @@
 function [ weight ] = SGD_update_weight( dim,N,samples, x,w )
-%SGD_UPDATE_WEIGHT Get updated of w with subgradient(dual optimal)
+%SGD_UPDATE_WEIGHT Get updated of w with subgradient(dual ,optimal)
 %   利用次梯度更新权重
 
 eps=1;
@@ -8,14 +8,15 @@ loop_count=0;
 
 n=length(w);
 
-%这个t0很关键，因为不是numcerically stable的算法
-t0=2*log(N);
+%这个t0很关键
+t0=0.02;
 
 %Bregman Divergence
-a1=ones(1,n)/n;
+a1=w;
 a2=a1;
 a=zeros(1,n);
-n
+load('weight2.mat','w_norm');
+shift =length(w_norm);
 while eps>=1e-4 && loop_count<=100
     beta= (loop_count+3)/2;
     last_a=a;
@@ -28,8 +29,9 @@ while eps>=1e-4 && loop_count<=100
     a1= (1-1/beta)*a1+1/beta*a2;
     eps= norm(last_a-a)/norm(a);
     loop_count=loop_count+1;
+    w_norm(shift+loop_count)= norm(last_a-a);
 end
-
+save('weight2.mat','w_norm','-append');
 weight=a;
 end
 

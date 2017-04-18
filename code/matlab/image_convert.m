@@ -21,6 +21,9 @@ for i=1:length(pos)
         img(x,y)= img(x,y)+distribution.prob(i);
     end
 end
+%s=ones(2)/4;
+%img=conv2(img,s,'valid');
+
 diff= length(pos)-length(img(img>0));
 %img= img./cnt;
 min_d = min(img(img>0));
