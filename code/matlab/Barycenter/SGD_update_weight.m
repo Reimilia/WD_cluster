@@ -1,4 +1,4 @@
-function [ weight ] = SGD_update_weight( dim,N,samples, x,w )
+function [ weight ] = SGD_update_weight( dim,N,samples, x,w,iter_step)
 %SGD_UPDATE_WEIGHT Get updated of w with subgradient(dual ,optimal)
 %   利用次梯度更新权重
 
@@ -15,8 +15,8 @@ t0=0.02;
 a1=w;
 a2=a1;
 a=zeros(1,n);
-load('weight2.mat','w_norm');
-shift =length(w_norm);
+%load('weight3.mat','w_norm');
+%shift =length(w_norm);
 while eps>=1e-4 && loop_count<=100
     beta= (loop_count+3)/2;
     last_a=a;
@@ -29,9 +29,9 @@ while eps>=1e-4 && loop_count<=100
     a1= (1-1/beta)*a1+1/beta*a2;
     eps= norm(last_a-a)/norm(a);
     loop_count=loop_count+1;
-    w_norm(shift+loop_count)= norm(last_a-a);
+    %w_norm(shift+loop_count)= norm(last_a-a);
 end
-save('weight2.mat','w_norm','-append');
+%save('weight3.mat','w_norm','-append');
 weight=a;
 end
 

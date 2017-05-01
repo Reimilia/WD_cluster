@@ -12,24 +12,24 @@ centers= zeros(2,batch_size);
 
 filename= 'label_train.txt';
 train_labels= importdata([Train_Data_path '..\' filename]);
-
+N=200;
 for k=1:batch_size
     subindex=find(train_labels==str2double(l{k}));
-    samples= cell(1,200);
-    for i=1:200
+    samples= cell(1,N);
+    for i=1:N
         samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'],0.1);
     end   
     options=[];
-    options.niter=3000;
-    distributions{k}= SGD_barycenter(2,200,samples);
-    centers(:,k)= mean(distributions{k}.pos,2);
-    distributions{k}.pos=distributions{k}.pos-centers(:,k);
+    options.niter=1500;
+    distributions{k}= BADMM(2,N,samples,options);
+    heat_imwrite(image_convert(distributions{k},[28,28],1),['temp/',l{k}, '_test_mean.png']);
+    %centers(:,k)= mean(distributions{k}.pos,2);
+    %distributions{k}.pos=distributions{k}.pos-centers(:,k);
     %figure(k)
     %plot3(distributions{k}.pos(1,:),distributions{k}.pos(2,:),distributions{k}.prob,'+');
     %img_center= image_convert(distributions{k},[32,32]);
-    %imwrite(img_center, [name{i}(1) '_test_mean.png']);
+    
 end
-centers
 
 listdir=dir([Data_path,'*.png']);
 L= length(listdir);
@@ -41,10 +41,11 @@ dist=zeros(L,batch_size);
 for i=1:L
     test=read_image([Data_path int2str(i-1) '.png'],0.1);
     %subplot(N,1,i);
-    means=mean(test.pos,2);
-    test.pos=test.pos-means;
-    labels(i)= find_nearest(test,distributions,60);
+    %means=mean(test.pos,2);
+    %test.pos=test.pos-means;
+    
     dist(i,:)= find_dist(test,distributions,60);
+    [~,labels(i)]= min(dist(i,:));
     if(mod(i,one_percent)==0)
         fprintf('%d percent is complete\n',round(i/one_percent));
     end

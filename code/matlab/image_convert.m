@@ -33,7 +33,7 @@ max_d = max(img(:));
 %线性插值到 [eps,0.8]
 %这样的目的只是不让最小值变成白色
 %img(img>0)=eps+(img(img>0)-min_d)/(max_d-min_d)*(0.8-eps);
-img=img/max_d;
+img=img/max_d*0.9;
 img(img>0)=0.7*exp(img(img>0)-1);
 %img(img<0.3)=0;
 end
