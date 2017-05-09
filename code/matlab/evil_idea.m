@@ -10,7 +10,7 @@ filename= 'label_train.txt';
 train_labels= importdata([Train_Data_path '..\' filename]);
 
 N=200;
-k=2;
+k=7;
 subindex=find(train_labels==str2double(l{k}));
 samples= cell(1,N);
 for i=1:N
@@ -19,15 +19,17 @@ for i=1:N
     %samples{i}.pos=samples{i}.pos-mean(samples{i}.pos,2)+14;
 end
 options=[];
-options.niter=1500;
+options.niter=500;
 options.imgsize=[28,28];
 options.test=1;
-[labels,centers]=Cluster_Test(2,N,samples,3,60,options);
+cluster_num=5;
+[labels,centers]=Cluster_Test(2,N,samples,5,60,options);
 labels;
+save(['label',int2str(k),'_',int2str(cluster_num),'_',int2str(N)],'labels')
 for i=1:length(centers)
     img_center= image_convert(centers{i},[28,28],1);
-    figure(i);
+    %figure(i);
     %imshow(img_center);
-    heat_imwrite(img_center, [int2str(i), 'Y_mean.png']);
+    heat_imwrite(img_center, [int2str(k), '_', int2str(i), 'Y_mean.png']);
 end
 

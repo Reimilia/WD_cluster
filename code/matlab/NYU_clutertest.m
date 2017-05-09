@@ -15,7 +15,8 @@ imgsize=[128,128];
 distributions=cell(1,100);
 xx=[0,50,150,250,336,422,522,608,708,808];
 j=1;
-    for k=1:2:10
+count=0;
+    for k=1:5
         for i=1:20
             p=  mat2gray(imageTestData(:,:,j,xx(k)+i));
             p= 1-imresize(p,0.25);
@@ -30,7 +31,8 @@ j=1;
             % To do: 这里的对齐有没有必要?
             %means=mean(pos,2);
             %pos=pos-means;
-            distributions{i+(k-6)*20}=mass_distribution(2,length(omega),pos,omega,'euclidean');
+            count=count+1;
+            distributions{count}=mass_distribution(2,length(omega),pos,omega,'euclidean');
             
         end   
     end

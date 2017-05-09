@@ -12,7 +12,7 @@ filename= 'label_train.txt';
 train_labels= importdata([Train_Data_path '..\' filename]);
 
 N=2000;
-for k=2:1:5
+for k=2:2
 subindex=find(train_labels==str2double(l{k}));
 samples= cell(1,N);
 for i=1:N
@@ -41,9 +41,11 @@ end
 %    dist(i)= trace(sinkhorn(C,lambda,center.prob,t.prob)*C);
 %end
 options=[];
-options.niter=2000;
+options.niter=50;
 options.test=1;
+tic
 center = BADMM(2,N,samples,options);
+toc
 %tic
 %dist_mat= zeros(N);
 %for i=1:N

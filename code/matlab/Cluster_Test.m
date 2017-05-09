@@ -41,7 +41,7 @@ while (eps>=1/N && loop_count<=50)
     for i=1:cluster_number
         sub_samples=samples(find(labels==i));
         if length(sub_samples)>0
-            options.guess= centroids{i};
+            %options.guess= centroids{i};
             centroids{i}=BADMM(dim,length(sub_samples),sub_samples,options);
         end
     end
