@@ -3,7 +3,7 @@ function [ labels,centroids] = Cluster_Test( dim,N,samples,cluster_number,lambda
 %这里有N个样本，我们要把它们分成K类
 
 % 尝试随机初始中心点
-
+samples{1}
 sub_sample_number= ceil(2*N/cluster_number);
 mk = cell2mat(cellfun(@(x)x.sample_size,samples,'UniformOutput',false));
 n= sum(mk);
@@ -27,7 +27,7 @@ loop_count=0;
 labels=zeros(1,N);
 %随便分一个label
 %labels=randi([1,cluster_number],1,N);
-while (eps>=1/N && loop_count<=50)
+while (eps>=0.02 && loop_count<=50)
     %Assign labels
     last_labels=labels;
     a_func= @(x)find_nearest(x,centroids,lambda);

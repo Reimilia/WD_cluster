@@ -11,12 +11,15 @@ batch_size= length(l);
 filename= 'label_train.txt';
 train_labels= importdata([Train_Data_path '..\' filename]);
 
-N=2000;
+N=50;
 for k=2:2
 subindex=find(train_labels==str2double(l{k}));
+subindex=subindex(subindex<10000);
 samples= cell(1,N);
 for i=1:N
     samples{i}=read_image([Train_Data_path int2str(subindex(i)-1) '.png'], 0.1);
+    p=imread([Train_Data_path int2str(subindex(i)-1) 'b.png']);
+    imwrite(p,['./temp/2/',int2str(i),'.png']);
     %heat_imwrite(image_convert(samples{i},[28,28],1),'test.png');
     %samples{i}.pos=samples{i}.pos-mean(samples{i}.pos,2)+14;
 end
@@ -41,7 +44,7 @@ end
 %    dist(i)= trace(sinkhorn(C,lambda,center.prob,t.prob)*C);
 %end
 options=[];
-options.niter=50;
+options.niter=3000;
 options.test=1;
 tic
 center = BADMM(2,N,samples,options);
@@ -66,14 +69,12 @@ toc
 %dist_mat2
 
 
-
-%center= BADMM(2,1,samples(1),options);
 img_center= image_convert(center,[28,28],1);
 
 %heat=colormap(hot);
 %imshow(1-img_center,'Colormap',heat);
 %imshow(img_center);
-heat_imwrite(img_center, [int2str(k) '_mean.png' ]);
+heat_imwrite(img_center, [int2str(k) '_mean_out.png' ]);
 %plot3(center.pos(1,:),center.pos(2,:),center.prob,'+');
 end
 

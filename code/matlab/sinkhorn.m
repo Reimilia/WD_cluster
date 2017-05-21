@@ -9,7 +9,7 @@ u=ones(n,1)/n;
 %sinkhorn iteration
 eps=1;
 loop_count=0;
-while eps>=5e-3 && loop_count<=200
+while eps>=1e-4 && loop_count<=2000
     last_u=u;
     v=b./(K'*u);
     u=a./(K*v);

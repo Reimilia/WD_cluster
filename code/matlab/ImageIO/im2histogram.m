@@ -2,6 +2,10 @@ function [ histogram ] = im2histogram( mat, threshold )
 %IM2HISTOGRAM 此处显示有关此函数的摘要
 %   此处显示详细说明
 p=im2double(mat);
+if(p(1,1)==1)
+    %Lazy way to judge
+    p=1-p;
+end
 imgsize=size(p);
 p(p<threshold)=0;
 

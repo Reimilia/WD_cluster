@@ -9,8 +9,8 @@ dim = size(sample_pos,1);
 N=length(centroids);
 dist= zeros(1,N);
 options=[];
-options.niter=100;
-options.test=1;
+options.niter=50;
+%options.test=1;
 
 for i=1:N
     %x=centroids{i}.pos;

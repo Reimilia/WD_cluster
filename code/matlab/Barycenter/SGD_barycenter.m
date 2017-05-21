@@ -16,7 +16,7 @@ n_norm=[];
 x_norm=[];
 w_norm=[];
 save('weightx.mat','w_norm');
-while (eps>=1e-8 && loop_count<=500)
+while (eps>=1e-8 && loop_count<=100)
     last_w=w;
     %Test pic
     %centroid=mass_distribution(dim,N,x,w,'euclidean');

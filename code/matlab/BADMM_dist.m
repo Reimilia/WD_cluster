@@ -27,7 +27,7 @@ w= sample1.prob;
 % 这一项是为了防止除法错误
 non_zero = 1e-20;
 C= pdist2(sample1.pos',sample2.pos','squaredeuclidean');
-rho=0.001;
+rho=2*mean(mean(C));
 eps=1;
 %% iteration for B-ADMM
 while (eps>=1e-4 && loop_count <= niter)
@@ -71,10 +71,10 @@ while (eps>=1e-4 && loop_count <= niter)
         primres = norm(P1-P2,'fro')/norm(P2,'fro');
         dualres = norm(P2-last_P2,'fro')/norm(P2,'fro');
         if test_on==1
-            %fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
-            %fprintf('\n%f,%f,%f,%f\n', norm(P1,'fro'),norm(P2,'fro'),norm(Lambda,'fro'),norm(P1-P2,'fro'));
-            %fprintf('\n');       
-            %fprintf('\t %d %f %f %f %f ', loop_count,rho,sum(C(:).*P1(:))/n,primres, dualres);       
+            fprintf('\t %d %f %f %f ', loop_count, sum(C(:).*P1(:))/n,primres, dualres);
+            fprintf('\n%f,%f,%f,%f\n', norm(P1,'fro'),norm(P2,'fro'),norm(Lambda,'fro'),norm(P1-P2,'fro'));
+            fprintf('\n');       
+            fprintf('\t %d %f %f %f %f ', loop_count,rho,sum(C(:).*P1(:))/n,primres, dualres);       
         end
         eps=sqrt(dualres * primres);
         %if primres>0.5

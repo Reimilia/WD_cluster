@@ -7,8 +7,8 @@ if threshold<0 || threshold>=1
     return;
 end
 
-
 p=imread(filename);
+p=imresize(p,[28,28]);
 %subplot(N,1,i);
 
 
